@@ -4,7 +4,6 @@
             [om-tools.core :refer-macros [defcomponent]]
             [sablono.core :as html :refer-macros [html]]
             [inflections.core :as i]
-            [witan.ui.refs :as refs]
             [witan.ui.util :refer [contains-str]]))
 
 ;; search input
@@ -30,7 +29,7 @@
   [forecast owner & opts]
   (render [_]
           (let [{:keys [on-click on-double-click]} (first opts)
-                forecasts-meta        (om/observe owner (refs/forecasts-meta))
+                forecasts-meta        {} ;; FIXME (om/observe owner (refs/forecasts-meta))
                 selected-forecast     (:selected forecasts-meta)
                 ancestor-set            (set (map second (:has-ancestors forecasts-meta)))
                 expanded-set            (set (map second (:expanded forecasts-meta)))

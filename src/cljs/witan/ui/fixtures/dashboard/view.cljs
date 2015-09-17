@@ -1,4 +1,4 @@
-(ns ^:figwheel-always witan.ui.components.dashboard
+(ns ^:figwheel-always witan.ui.fixtures.dashboard.view
   (:require [om.core :as om :include-macros true]
             [om-tools.dom :as dom :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
@@ -9,10 +9,8 @@
             [witan.ui.widgets :as widgets]
             [witan.schema.core :refer [Forecast]]
             [witan.ui.strings :refer [get-string]]
-            [witan.ui.async :refer [raise!]]
-            [witan.ui.refs :as refs]
             [witan.ui.util :refer [goto-window-location!]]
-            [witan.ui.nav :as nav]))
+            [venue.core :as venue]))
 
 (defn get-selected-forecast
   [cursor]
@@ -30,15 +28,15 @@
           (i/capitalize (get-string :forecasts))]
          (om/build widgets/search-input
                    (str (get-string :filter) " " (get-string :forecasts))
-                   {:opts {:on-input #(raise! %1 :event/filter-forecasts %2)}})
+                   {:opts {:on-input #(venue/raise! %1 :event/filter-forecasts %2)}})
          [:ul.pure-menu-list
           [:li.witan-menu-item.pure-menu-item
-           [:a {:href (nav/new-forecast)}
+           [:a {:href (venue/get-route :views/new-forecast)}
             [:button.pure-button.button-success
              [:i.fa.fa-plus]]]]
           (if (and (not-empty selected) is-top-level?)
             [:li.witan-menu-item.pure-menu-item
-             [:a {:href (nav/forecast-wizard {:id selected-id :action "input"})}
+             [:a {:href (venue/get-route :views/forecast {:id selected-id :action "input"})}
               [:button.pure-button.button-error
                [:i.fa.fa-pencil]]]])
           (if (seq selected)
@@ -48,12 +46,12 @@
                [:i.fa.fa-copy]]]])
           (if (seq selected)
             [:li.witan-menu-item.pure-menu-item
-             [:a {:href (nav/forecast-wizard {:id selected-id :action "output"})}
+             [:a {:href (venue/get-route :views/forecast {:id selected-id :action "output"})}
               [:button.pure-button.button-primary
                [:i.fa.fa-download]]]])
           (if (seq selected)
             [:li.witan-menu-item.pure-menu-item
-             [:a {:href (nav/share {:id selected-id})}
+             [:a {:href (venue/get-route :views/share {:id selected-id})}
               [:button.pure-button.button-primary
                [:i.fa.fa-share-alt]]]])]]))))
 
@@ -81,7 +79,7 @@
          (om/build-all widgets/forecast-tr
                        (:forecasts cursor)
                        {:key  :id
-                        :opts {:on-click        #(raise! %1 %2 %3)
+                        :opts {:on-click        #(venue/raise! %1 %2 %3)
                                :on-double-click #(if (nil? (:descendant-id %2))
                                                   (goto-window-location!
-                                                    (nav/forecast-wizard {:id (:id %2) :action "input"})))}})]]])))
+                                                    (venue/get-route :views/forecast {:id (:id %2) :action "input"})))}})]]])))

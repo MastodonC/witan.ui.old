@@ -1,4 +1,4 @@
-(ns ^:figwheel-always witan.ui.components.forecast
+(ns ^:figwheel-always witan.ui.fixtures.forecast.view
   (:require [om.core :as om :include-macros true]
             [om-tools.dom :as dom :include-macros true]
             [om-tools.core :refer-macros [defcomponent defcomponentmethod]]
@@ -9,9 +9,7 @@
             [witan.ui.widgets :as widgets]
             [witan.ui.components.model-diagram :as model-diagram]
             [witan.schema.core :refer [Forecast]]
-            [witan.ui.async :refer [raise!]]
-            [witan.ui.refs :as refs]
-            [witan.ui.nav :as nav]))
+            [venue.core :as venue]))
 
 (def valid-actions
   #{:input
@@ -68,7 +66,7 @@
 (defcomponent view
   [cursor owner]
   (render [_]
-    (let [{:keys [id action]} (-> cursor :view-state :forecast-wizard)
+    (let [{:keys [id action]} cursor
           kaction (keyword action)
           forecast (some #(if (= (:id %) id) %) (:forecasts cursor))
           ;; this is directly included in the forecast's data for now. More realistically
@@ -80,13 +78,13 @@
          [:div.pure-u-1#witan-pw-top-spacer]
          [:div.pure-u-1-12 {:key "forecast-left"}
           [:div.witan-pw-nav-button
-           [:a {:href (nav/forecast-wizard {:id id :action (previous-action action)})}
+           [:a {:href (venue/get-route :views/forecast {:id id :action (previous-action action)})}
             [:i.fa.fa-chevron-left.fa-3x]]]]
          [:div.pure-u-5-6.witan-model-diagram {:key "forecast-centre"}
           (om/build model-diagram/diagram model-conf)]
          [:div.pure-u-1-12 {:key "forecast-right"}
           [:div.witan-pw-nav-button
-           [:a {:href (nav/forecast-wizard {:id id :action (next-action action)})}
+           [:a {:href (venue/get-route :views/forecast {:id id :action (next-action action)})}
             [:i.fa.fa-chevron-right.fa-3x]]]]
          (if-not (contains? valid-actions kaction)
            [:div.pure-u-1 [:span "Unknown forecast action"]]

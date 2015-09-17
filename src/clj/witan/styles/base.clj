@@ -58,6 +58,9 @@
 
          ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+     [:#app
+      {:padding "0 1em"}]
+
      [:.button-success
       {:background-color colour/button-success
        :color colour/white}]
