@@ -3,6 +3,7 @@
               [venue.core :as venue :include-macros true]
               ;;
               [witan.ui.services.api]
+              [witan.ui.services.data]
               ;;
               [witan.ui.fixtures.login.view]
               [witan.ui.fixtures.login.view-model]
@@ -32,7 +33,8 @@
    :state {:expanded      #{}
            :selected       []
            :has-ancestors #{}
-           :filter         nil}})
+           :filter         nil
+           :refreshing?    false}})
 
 (venue/defview!
   {:target "app"
@@ -83,8 +85,11 @@
   {:id :service/api
    :handler witan.ui.services.api/service})
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(venue/defservice!
+  {:id :service/data
+   :handler witan.ui.services.data/service})
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (venue/start!)
 
