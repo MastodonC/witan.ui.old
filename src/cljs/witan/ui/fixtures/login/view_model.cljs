@@ -2,27 +2,17 @@
     (:require [om.core :as om :include-macros true]
               [venue.core :as venue]
               [witan.ui.strings :as s])
-    (:require-macros [cljs-log.core :as log]))
+    (:require-macros [cljs-log.core :as log]
+                     [witan.ui.macros :as wm]))
 
-(defmulti event-handler
-  (fn [event args cursor] event))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmulti response-handler
-  (fn [result response cursor] result))
+(wm/create-standard-view-model!)
 
-(defn view-model
-  []
-  (reify
-    venue/IHandleEvent
-    (handle-event [owner event args cursor]
-      (event-handler event args cursor))
-    venue/IHandleResponse
-    (handle-response [owner outcome event response cursor]
-      (response-handler [event outcome] response cursor))
-    venue/IActivate
-    (activate [owner args cursor])))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn on-activate
+  [args cursor])
 
 (defmethod event-handler
   :event/reset-password
@@ -43,7 +33,7 @@
   (om/update! cursor :email email)
   (venue/request! cursor :service/api :login [email pass]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod response-handler
   [:login :success]

@@ -10,8 +10,7 @@
                      [cljs-log.core :as log]
                      [witan.ui.macros :as wm]))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (wm/create-standard-view-model!)
 
