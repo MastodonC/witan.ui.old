@@ -10,11 +10,27 @@
                      [cljs-log.core :as log]
                      [witan.ui.macros :as wm]))
 
+
+(defn update-forecasts!
+  [cursor]
+  (let [all-expanded (-> cursor :expanded)
+        filter (-> cursor :filter)
+        toggled-on (mapv #(vector :db/id (first %)) all-expanded)]
+    (venue/request! cursor :service/data :fetch-forecasts
+                    {:expand toggled-on
+                     :filter filter})))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (wm/create-standard-view-model!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn on-initialise
+  [cursor]
+  (util/inline-subscribe!
+   :data/forecasts-updated
+   #(update-forecasts! cursor)))
 
 (defn on-activate
   [args cursor]
@@ -24,19 +40,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn update-filters!
-  [cursor]
-  (let [all-expanded (-> cursor :expanded)
-        filter (-> cursor :filter)
-        toggled-on (mapv #(vector :db/id (first %)) all-expanded)]
-    (venue/request! cursor :service/data :get-filters
-                    {:expand toggled-on
-                     :filter filter})))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (defn api-failure!
-  []
-  (log/severe "API failure"))
+  [msg]
+  (log/severe "API failure:" msg))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -49,16 +55,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod response-handler
-  [:refresh-forecasts :success]
-  [_ response cursor]
-  (update-filters! cursor))
+  [:fetch-forecasts :success]
+  [_ {:keys [forecasts has-ancestors]} cursor]
+  (om/update! cursor :forecasts forecasts)
+  (om/update! cursor :has-ancestors has-ancestors)
+  (om/update! cursor :refreshing? false))
 
 (defmethod response-handler
-  [:get-filters :success]
-  [_ response cursor]
-  (om/update! cursor :forecasts response))
-
-(defmethod response-handler
-  [:refresh-forecasts :failure]
-  [_ response cursor]
-  (api-failure!))
+  :default
+  [_ response cursor])

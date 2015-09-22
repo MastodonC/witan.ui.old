@@ -5,7 +5,7 @@
   (:require-macros [cljs-log.core :as log]
                    [cljs.core.async.macros :refer [go]]))
 
-(def ^:private token (atom nil))
+(def ^:private api-token (atom nil))
 
 (defmulti service-m
   (fn [event args result-ch] event))
@@ -33,21 +33,22 @@
 
 (defn GET
   [event method params result-ch]
-  (ajax/ajax-request
-   {:method :get
-    :uri (local-endpoint method)
-    :params params
+  (ajax/GET (local-endpoint method)
+   {:params params
     :handler (partial handle-response :success event result-ch)
     :error-handler (partial handle-response :failure event result-ch)
-    ;;:format :json
-    :response-format (ajax/json-response-format {:keywords? true})}))
+    :format :json
+    :headers {"Authorization" (str "Token " @api-token)}}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn service
   [event args result-ch]
-  (when (or (= event :login) @token)
-    (service-m event args result-ch)))
+  (if (or (= event :login) @api-token)
+    (service-m event args result-ch)
+    (do
+      (log/warn "An API request was received but there is no token so the outbound call will not be made.")
+      (put! result-ch [:failure :no-token]))))
 
 (defmethod service-m
   :login
@@ -57,7 +58,7 @@
 (defmethod service-m
   :refresh-forecasts
   [event _ result-ch]
-  (GET event "/forecasts" {:user "foobar" :token @token} result-ch))
+  (GET event "/forecasts" {:user "foobar"} result-ch))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -67,14 +68,18 @@
   (if-let [token (:token response)]
     (do
       (log/info "Login success.")
-      (reset! token token)
-      (venue/publish! :user-logged-in {:name "foobar"})
+      (reset! api-token token)
+      (venue/publish! :api/user-logged-in {:name "foobar"})
       true)
     (do
       (log/info "Login failed.")
       (log/debug "Response:" response)
-      (venue/publish! :user-logged-in {:name "foobar"}) ;; FIXME
       false)))
+
+(defmethod api-response
+  [:refresh-forecasts :success]
+  [_ response]
+  (venue/publish! :api/forecasts-refreshed response))
 
 (defmethod api-response
   :default

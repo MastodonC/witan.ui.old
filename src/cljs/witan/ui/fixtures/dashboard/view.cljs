@@ -10,11 +10,27 @@
               [witan.schema.core :refer [Forecast]]
               [witan.ui.strings :refer [get-string]]
               [witan.ui.util :refer [goto-window-location!]]
-              [venue.core :as venue]))
+              [venue.core :as venue])
+    (:require-macros [cljs-log.core :as log]))
 
 (defn get-selected-forecast
   [cursor]
-  (some #(if (= (:id %) (-> cursor :view-state :forecasts :selected second)) %) (:forecasts cursor)))
+  (some #(if (= (:id %) (-> cursor :selected second)) %) (:forecasts cursor)))
+
+(defn as-forecast-tr
+  [cursor forecast]
+  (let [selected-forecast     (:selected cursor)
+        ancestor-set          (set (map second (:has-ancestors cursor)))
+        expanded-set          (set (map second (:expanded cursor)))
+        is-selected-forecast? (= (:id forecast) (second selected-forecast))
+        has-ancestor?         (contains? ancestor-set (:id forecast))
+        is-expanded?          (contains? expanded-set (:id forecast))
+        has-descendant?       (not (nil? (:descendant-id forecast)))]
+    (-> forecast
+        (assoc :has-ancestor? has-ancestor?)
+        (assoc :is-selected-forecast? is-selected-forecast?)
+        (assoc :is-expanded? is-expanded?)
+        (assoc :has-descendant? has-descendant?))))
 
 (defcomponent
   header
@@ -78,7 +94,7 @@
                  [:th.text-center {:key (name x)} (get-string x)])]
               [:tbody
                (om/build-all widgets/forecast-tr
-                             (:forecasts cursor)
+                             (map #(as-forecast-tr cursor %) (:forecasts cursor))
                              {:key  :id
                               :opts {:on-click        #(venue/raise! %1 %2 %3)
                                      :on-double-click #(when (nil? (:descendant-id %2))

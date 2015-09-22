@@ -10,6 +10,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn on-initialise
+  [cursor])
+
 (defn on-activate
   [{:keys [id action]} cursor]
   (om/update! cursor :id id)

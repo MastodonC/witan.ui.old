@@ -4,6 +4,7 @@
 (defmacro create-standard-view-model!
   []
   `(do
+     (cljs.core/declare ~'on-initialise)
      (cljs.core/declare ~'on-activate)
 
      (cljs.core/defmulti ~'event-handler
@@ -23,4 +24,7 @@
                              (~'response-handler [event# outcome#] response# cursor#))
           venue/IActivate
           (~'activate [owner# args# cursor#]
-                      (~'on-activate args# cursor#))))))
+                      (~'on-activate args# cursor#))
+          venue/IInitialise
+          (~'initialise [owner# cursor#]
+                        (~'on-initialise cursor#))))))

@@ -23,9 +23,10 @@
   (set! (.. js/document -location -href) location))
 
 (defn inline-subscribe!
-  [ch topic fnc]
-  (venue/subscribe! topic ch)
-  (go-loop []
-    (let [{:keys [content]} (<! ch)]
-      (fnc content))
-    (recur)))
+  [topic fnc]
+  (let [ch (chan)]
+    (venue/subscribe! topic ch)
+    (go-loop []
+      (let [{:keys [content]} (<! ch)]
+        (fnc content))
+      (recur))))

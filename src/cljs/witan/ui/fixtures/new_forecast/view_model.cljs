@@ -10,4 +10,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn on-activate [args cursor])
+(defn on-initialise
+  [cursor])
+
+(defn on-activate
+  [args cursor])
