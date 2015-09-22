@@ -34,7 +34,8 @@
            :selected       []
            :has-ancestors #{}
            :filter         nil
-           :refreshing?    false}})
+           :refreshing?    false
+           :forecasts      []}})
 
 (venue/defview!
   {:target "app"

@@ -7,40 +7,32 @@
               [witan.ui.services.data :as data]
               [venue.core :as venue :include-macros true])
     (:require-macros [cljs.core.async.macros :as am :refer [go go-loop alt!]]
-                     [cljs-log.core :as log]))
+                     [cljs-log.core :as log]
+                     [witan.ui.macros :as wm]))
 
-(def mb-chan (chan))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+
+(wm/create-standard-view-model!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn on-activate
   [args cursor]
-  (log/debug "ACTIVE AND " data/logged-in?)
-  (when data/logged-in?
+  (when (data/logged-in?)
     (om/update! cursor :refreshing? true)
     (venue/request! cursor :service/api :refresh-forecasts)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmulti event-handler
-  (fn [event args cursor] event))
-
-(defmulti response-handler
-  (fn [result response cursor] result))
-
-(defn view-model
-  []
-  (reify
-    venue/IHandleEvent
-    (handle-event [owner event args cursor]
-      (event-handler event args cursor))
-    venue/IHandleResponse
-    (handle-response [owner outcome event response cursor]
-      (response-handler [event outcome] response cursor))
-    venue/IActivate
-    (activate [owner args cursor]
-      (on-activate args cursor))))
-
+(defn update-filters!
+  [cursor]
+  (let [all-expanded (-> cursor :expanded)
+        filter (-> cursor :filter)
+        toggled-on (mapv #(vector :db/id (first %)) all-expanded)]
+    (venue/request! cursor :service/data :get-filters
+                    {:expand toggled-on
+                     :filter filter})))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn api-failure!
@@ -60,7 +52,12 @@
 (defmethod response-handler
   [:refresh-forecasts :success]
   [_ response cursor]
-  (om/update! cursor :refreshing? false))
+  (update-filters! cursor))
+
+(defmethod response-handler
+  [:get-filters :success]
+  [_ response cursor]
+  (om/update! cursor :forecasts response))
 
 (defmethod response-handler
   [:refresh-forecasts :failure]

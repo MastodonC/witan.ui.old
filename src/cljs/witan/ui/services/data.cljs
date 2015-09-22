@@ -4,9 +4,9 @@
             [venue.core :as venue])
   (:require-macros [cljs-log.core :as log]))
 
-(def ^:private state (atom {:logged-in? false}))
+(def state (atom {:logged-in? false}))
 
-(def logged-in? (:logged-in? @state))
+(defn logged-in? [] (:logged-in? @state))
 
 (defmulti service
   (fn [event args result-ch] event))
