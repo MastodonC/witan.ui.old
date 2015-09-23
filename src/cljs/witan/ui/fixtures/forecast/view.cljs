@@ -64,11 +64,9 @@
       [:div "Model view"])))
 
 (defcomponent view
-  [cursor owner]
+  [{:keys [id action forecast]} owner]
   (render [_]
-    (let [{:keys [id action]} cursor
-          kaction (keyword action)
-          forecast (some #(if (= (:id %) id) %) (:forecasts cursor))
+    (let [kaction (keyword action)
           ;; this is directly included in the forecast's data for now. More realistically
           ;; it would be derived from input and output information in the forecast.
           model-conf (merge {:action kaction} (select-keys forecast [:n-inputs :n-outputs]))]
@@ -81,7 +79,7 @@
            [:a {:href (venue/get-route :views/forecast {:id id :action (previous-action action)})}
             [:i.fa.fa-chevron-left.fa-3x]]]]
          [:div.pure-u-5-6.witan-model-diagram {:key "forecast-centre"}
-          (om/build model-diagram/diagram model-conf)]
+          (when forecast (om/build model-diagram/diagram model-conf))]
          [:div.pure-u-1-12 {:key "forecast-right"}
           [:div.witan-pw-nav-button
            [:a {:href (venue/get-route :views/forecast {:id id :action (next-action action)})}

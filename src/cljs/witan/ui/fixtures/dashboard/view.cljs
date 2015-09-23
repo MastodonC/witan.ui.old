@@ -85,8 +85,8 @@
                                     set)])
              [:table.pure-table.pure-table-horizontal#witan-dash-forecast-list
               [:thead
-               [:th]                                              ;; empty, for the tree icon
-               [:th (get-string :forecast-name)]
+               [:th {:key "forecast-tree"}] ;; empty, for the tree icon
+               [:th {:key "forecast-name"} (get-string :forecast-name)]
                (for [x [:forecast-type
                         :forecast-owner
                         :forecast-version

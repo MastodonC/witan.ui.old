@@ -1,11 +1,20 @@
 (ns witan.ui.services.api
   (:require [ajax.core :as ajax]
             [cljs.core.async :refer [put! take! chan <! close!]]
-            [venue.core :as venue])
+            [venue.core :as venue]
+            [goog.net.cookies :as cookies])
   (:require-macros [cljs-log.core :as log]
                    [cljs.core.async.macros :refer [go]]))
 
 (def ^:private api-token (atom nil))
+
+(defn save-token!
+  [token]
+  (reset! api-token token)
+  (.set goog.net.cookies "tkn" token -1))
+
+(defmulti response-handler
+  (fn [result response cursor] result))
 
 (defmulti service-m
   (fn [event args result-ch] event))
@@ -42,13 +51,23 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn service
+(defn request-handler
   [event args result-ch]
   (if (or (= event :login) @api-token)
     (service-m event args result-ch)
     (do
       (log/warn "An API request was received but there is no token so the outbound call will not be made.")
       (put! result-ch [:failure :no-token]))))
+
+(defn service
+  []
+  (reify
+    venue/IHandleRequest
+    (handle-request [owner request args response-ch]
+      (request-handler request args response-ch))
+    venue/IHandleResponse
+    (handle-response [owner outcome event response cursor]
+      (response-handler [event outcome] response cursor))))
 
 (defmethod service-m
   :login
@@ -60,6 +79,11 @@
   [event _ result-ch]
   (GET event "/forecasts" {:user "foobar"} result-ch))
 
+(defmethod service-m
+  :get-forecast
+  [event id result-ch]
+  (GET event (str "/forecasts/" id) nil result-ch))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod api-response
@@ -68,7 +92,7 @@
   (if-let [token (:token response)]
     (do
       (log/info "Login success.")
-      (reset! api-token token)
+      (save-token! token)
       (venue/publish! :api/user-logged-in {:name "foobar"})
       true)
     (do
@@ -83,4 +107,4 @@
 
 (defmethod api-response
   :default
-  [_ response])
+  [event response] response)

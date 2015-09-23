@@ -12,35 +12,39 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn on-initialise
-  [cursor])
+  [owner cursor])
 
 (defn on-activate
-  [args cursor])
+  [owner args cursor])
 
 (defmethod event-handler
   :event/reset-password
-  [_ email cursor]
+  [owner _ email cursor]
   (log/warn "TODO Reset instruction received in view-model"))
 
 (defmethod event-handler
   :event/show-password-reset
-  [_ show cursor]
+  [owner _ show cursor]
   (if show
     (om/update! cursor :phase :reset)
     (om/update! cursor :phase :prompt)))
 
 (defmethod event-handler
   :event/attempt-login
-  [_ {:keys [email pass]} cursor]
+  [owner _ {:keys [email pass]} cursor]
   (om/update! cursor :phase :waiting)
   (om/update! cursor :email email)
-  (venue/request! cursor :service/api :login [email pass]))
+  (venue/request! {:owner owner
+                   :service :service/api
+                   :request :login
+                   :args [email pass]
+                   :context cursor}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod response-handler
   [:login :success]
-  [_ response cursor]
+  [owner _ response cursor]
   (if response
     (do
       (om/update! cursor :logged-in? true))
@@ -50,6 +54,6 @@
 
 (defmethod response-handler
   [:login :failure]
-  [_ response cursor]
+  [owner _ response cursor]
   (om/update! cursor :message (s/get-string :api-failure))
   (om/update! cursor :phase :prompt))

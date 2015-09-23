@@ -11,7 +11,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn on-initialise
-  [cursor])
+  [owner cursor])
 
 (defn on-activate
-  [args cursor])
+  [owner args cursor])
