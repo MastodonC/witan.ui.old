@@ -45,8 +45,6 @@
     (do
       (om/update! cursor :logged-in? true))
     (do
-      (om/update! cursor :logged-in? true)
-      ;;
       (om/update! cursor :message (s/get-string :sign-in-failure))
       (om/update! cursor :phase :prompt))))
 
