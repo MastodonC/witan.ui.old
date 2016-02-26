@@ -7,5 +7,5 @@
    (gs/at-font-face
     {:font-family "'Kadwa', serif"})])
 
-(def base-fonts  ["'Fira Sans'" "Helvetica Neue" "Helvetica" "Arial" "sans-serif"])
-(def title-fonts ["'Kadwa'" "Helvetica Neue" "Helvetica" "Arial" "sans-serif"])
+(def base-fonts  ["Helvetica Neue" "Helvetica" "Arial" "sans-serif"])
+(def title-fonts ["Helvetica Neue" "Helvetica" "Arial" "sans-serif"])
