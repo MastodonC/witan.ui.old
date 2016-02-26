@@ -290,7 +290,8 @@
      [:.witan-page-heading
       {:background-color colour/lighter-gray
        :box-shadow "0px 2px 4px #888888"
-       :height (px 58)
+       :padding-top: (em 1)
+       :padding-bottom: (em 0.65)
        :position :relative
        :z-index 5}
       [:.pure-menu-list
