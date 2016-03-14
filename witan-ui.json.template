@@ -6,7 +6,7 @@
       "image": "mastodonc/witan.ui:@@TAG@@",
       "parameters": [
          {"key": "log-driver", "value": "gelf"},
-         {"key": "log-opt", "value": "gelf-address=udp://logstash.kixi.io:12201"}
+         {"key": "log-opt", "value": "gelf-address=udp://logstash.mastodonc.net:12201"}
       ],
       "network": "BRIDGE",
       "portMappings": [
