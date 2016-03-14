@@ -15,7 +15,7 @@ deployment:
       - docker tag -f mastodonc/witan.ui mastodonc/witan.ui:git-$(echo $CIRCLE_SHA1 | cut -c1-12)
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push mastodonc/witan.ui
-      - ./deploy.sh $DEPLOY_PRODUCTION_IP
+      - ./deploy.sh $DEPLOY_PRODUCTION_IP production
   staging:
     branch: master
     commands:
@@ -25,4 +25,4 @@ deployment:
       - docker tag -f mastodonc/witan.ui mastodonc/witan.ui:git-$(echo $CIRCLE_SHA1 | cut -c1-12)
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push mastodonc/witan.ui
-      - ./deploy.sh $DEPLOY_STAGING_IP
+      - ./deploy.sh $DEPLOY_STAGING_IP staging
