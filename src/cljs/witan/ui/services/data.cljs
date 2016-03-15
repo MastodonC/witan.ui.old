@@ -451,8 +451,7 @@
   [logged-in?]
   (swap! state assoc :logged-in? logged-in?)
   (if logged-in?
-    (venue/reactivate!)
-    (set! (.. js/document -location -href) "/")))
+    (venue/reactivate!)))
 
 (util/inline-subscribe!
  :api/user-logged-in

@@ -17,10 +17,13 @@
   (.set goog.net.cookies token-name token -1))
 
 (defn logout!
-  []
-  (log/info "Logging out...")
-  (save-token! nil)
-  (venue/publish! :api/user-logged-out))
+  ([]
+   (logout! "/"))
+  ([next-url]
+   (log/info "Logging out...")
+   (save-token! nil)
+   (venue/publish! :api/user-logged-out)
+   (set! (.. js/document -location -href) next-url)))
 
 (defmulti response-handler
   (fn [result response cursor] result))
@@ -91,10 +94,14 @@
 
 (defn request-handler
   [event args result-ch]
-  (if (or (contains? #{:login :sign-up} event) @api-token)
+  (if (or (contains? #{:login
+                       :logout
+                       :sign-up
+                       :start-password-reset
+                       :complete-password-reset} event) @api-token)
     (service-m event args result-ch)
     (do
-      (log/warn "An API request was received but there is no token so the outbound call will not be made and we'll log out...")
+      (log/warn "An API request was received but there is no token so the outbound call will not be made and we'll log out..." event )
       (logout!)
       (put! result-ch [:failure :no-token]))))
 
@@ -128,8 +135,8 @@
 
 (defmethod service-m
   :logout
-  [event id result-ch]
-  (logout!)
+  [event {:keys [next-url] :or {next-url "/"}} result-ch]
+  (logout! next-url)
   (put! result-ch [:success nil]))
 
 (defmethod service-m
@@ -191,6 +198,16 @@
   :sign-up
   [event args result-ch]
   (POST event "/user" args result-ch))
+
+(defmethod service-m
+  :start-password-reset
+  [event email result-ch]
+  (POST event "/request-password-reset" {:username email} result-ch))
+
+(defmethod service-m
+  :complete-password-reset
+  [event args result-ch]
+  (POST event "/complete-password-reset" args result-ch))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
