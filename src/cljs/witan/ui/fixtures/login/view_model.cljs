@@ -28,7 +28,7 @@
 
 (defn password-strong?
   [password]
-  (>= (count password) 8))
+  (> (count password) 8))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
