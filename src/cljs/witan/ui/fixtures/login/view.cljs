@@ -1,14 +1,46 @@
 (ns ^:figwheel-always witan.ui.fixtures.login.view
-    (:require [om.core :as om :include-macros true]
-              [om-tools.core :refer-macros [defcomponentmethod defcomponent]]
-              [sablono.core :as html :refer-macros [html]]
-              [witan.ui.strings :refer [get-string]]
-              [venue.core :as venue])
-    (:require-macros [cljs-log.core :as log]))
+  (:require [om.core :as om :include-macros true]
+            [om-tools.core :refer-macros [defcomponentmethod defcomponent]]
+            [sablono.core :as html :refer-macros [html]]
+            [witan.ui.strings :refer [get-string get-string-md]]
+            [venue.core :as venue])
+  (:require-macros [cljs-log.core :as log]))
 
 (defmulti login-state-view
   "Multimedia for the different login screen states"
   (fn [cursor owner] (:phase cursor)))
+
+(defcomponentmethod
+  login-state-view
+  :reset-redeem
+  [cursor owner]
+  (render [_]
+          (html [:div.sub-page-div
+                 [:h3 (get-string :reset-password)]
+                 [:span#error-message (:message cursor)]
+                 [:p.text-white
+                  [:span (get-string :reset-password-redeem)]]
+                 [:form {:class "pure-form pure-form-stacked"
+                         :on-submit (fn [e]
+                                      (venue/raise! owner :event/attempt-reset-redeem {:password [(.-value (om/get-node owner "password"))
+                                                                                                  (.-value (om/get-node owner "confirm-password"))]})
+                                      (.preventDefault e))}
+                  [:input {:tab-index 5
+                           :ref "password"
+                           :type "password"
+                           :id "password"
+                           :placeholder (get-string :password)
+                           :required :required}]
+                  [:input {:tab-index 6
+                           :ref "confirm-password"
+                           :type "password"
+                           :id "confirm-password"
+                           :placeholder (get-string :confirm-password)
+                           :require :required}]
+                  [:div [:button {:tab-index 7
+                                  :type "submit"
+                                  :class "pure-button pure-button-primary"} (get-string :reset-password)]]]
+                 ])))
 
 (defcomponentmethod
   login-state-view
@@ -137,16 +169,11 @@
              [:span {:id "reset-instructions"} (get-string :forgotten-instruction)]]
             [:form {:class "pure-form"
                     :on-submit (fn [e]
-                                 (comment (set! (.-innerText (. js/document (getElementById "reset-instructions"))) (get-string :reset-submitted))
-                                          (set! (.-innerText (. js/document (getElementById "reset-button"))) (get-string :thanks))
-                                          (set! (.-disabled (. js/document (getElementById "reset-button"))) true)
-                                          (set! (.-disabled (. js/document (getElementById "reset-input"))) true))
-                                 (.open js/window
-                                        (str
-                                         "mailto:witan@mastodonc.com?subject=[Witan Password Reset Request]"
-                                         "&body=Please reset the password for the following email address: "
-                                         (.-value (om/get-node owner "reset-email"))) "resetEmailWindow" "height=400,width=600,left=10,top=10")
-                                 #_(venue/raise! owner :event/reset-password (.-value (om/get-node owner "reset-email")))
+                                 (set! (.-innerHTML (. js/document (getElementById "reset-instructions"))) (get-string-md :reset-submitted))
+                                 (set! (.-innerText (. js/document (getElementById "reset-button"))) (get-string :thanks))
+                                 (set! (.-disabled (. js/document (getElementById "reset-button"))) true)
+                                 (set! (.-disabled (. js/document (getElementById "reset-input"))) true)
+                                 (venue/raise! owner :event/reset-password (.-value (. js/document (getElementById "reset-input"))))
                                  (.preventDefault e))}
              [:input {:tab-index 1
                       :ref "reset-email"

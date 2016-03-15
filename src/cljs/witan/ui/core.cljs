@@ -1,26 +1,27 @@
 (ns ^:figwheel-always witan.ui.core
-    (:require [om.core :as om :include-macros true]
-              [venue.core :as venue :include-macros true]
-              ;;
-              [witan.ui.services.api]
-              [witan.ui.services.mock-api]
-              [witan.ui.services.data]
-              [witan.ui.services.analytics]
-              ;;
-              [witan.ui.fixtures.login.view]
-              [witan.ui.fixtures.login.view-model]
-              [witan.ui.fixtures.dashboard.view]
-              [witan.ui.fixtures.dashboard.view-model]
-              [witan.ui.fixtures.forecast.view]
-              [witan.ui.fixtures.forecast.view-model]
-              [witan.ui.fixtures.new-forecast.view]
-              [witan.ui.fixtures.new-forecast.view-model]
-              [witan.ui.fixtures.share.view]
-              [witan.ui.fixtures.share.view-model]
-              [witan.ui.fixtures.sidebar.view]
-              [witan.ui.fixtures.sidebar.view-model])
-    (:require-macros [cljs-log.core :as log]
-                     [witan.ui.env :as env :refer [cljs-env]]))
+  (:require [om.core :as om :include-macros true]
+            [venue.core :as venue :include-macros true]
+            ;;
+            [witan.ui.services.api]
+            [witan.ui.services.mock-api]
+            [witan.ui.services.data]
+            [witan.ui.services.analytics]
+            ;;
+            [witan.ui.fixtures.empty]
+            [witan.ui.fixtures.login.view]
+            [witan.ui.fixtures.login.view-model]
+            [witan.ui.fixtures.dashboard.view]
+            [witan.ui.fixtures.dashboard.view-model]
+            [witan.ui.fixtures.forecast.view]
+            [witan.ui.fixtures.forecast.view-model]
+            [witan.ui.fixtures.new-forecast.view]
+            [witan.ui.fixtures.new-forecast.view-model]
+            [witan.ui.fixtures.share.view]
+            [witan.ui.fixtures.share.view-model]
+            [witan.ui.fixtures.sidebar.view]
+            [witan.ui.fixtures.sidebar.view-model])
+  (:require-macros [cljs-log.core :as log]
+                   [witan.ui.env :as env :refer [cljs-env]]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -81,6 +82,14 @@
    :view-model witan.ui.fixtures.share.view-model/view-model
    :state {}})
 
+(venue/defview!
+  {:target "app"
+   :route "/password-reset/:token/:username"
+   :id :views/password-reset
+   :view witan.ui.fixtures.empty/view
+   :view-model witan.ui.fixtures.empty/view-model
+   :state {}})
+
 ;;;;;;;;;;;;;;
 
 (venue/defstatic!
@@ -92,7 +101,8 @@
            :message    nil
            :logged-in? false
            :email      nil
-           :waiting-msg :signing-in}})
+           :waiting-msg :signing-in
+           :reset-args nil}})
 
 (venue/defstatic!
   {:target "side"

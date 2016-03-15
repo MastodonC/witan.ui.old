@@ -17,7 +17,8 @@
                  [venue "0.1.10"]
                  [cljs-log "0.2.2"]
                  [com.andrewmcveigh/cljs-time "0.3.14"]
-                 [kixi/s3-beam "0.4.0"]]
+                 [kixi/s3-beam "0.4.0"]
+                 [markdown-clj "0.9.86"]]
 
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-figwheel "0.3.5"]

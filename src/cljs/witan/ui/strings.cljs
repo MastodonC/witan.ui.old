@@ -1,5 +1,6 @@
 (ns witan.ui.strings
-  (:require [clojure.string])
+  (:require [clojure.string]
+            [markdown.core :refer [md->html]])
   (:require-macros
    [cljs-log.core :as log]))
 
@@ -42,11 +43,13 @@
    :forgotten-question             "forgotten your password?"
    :forgotten-password             "Forgotten Password"
    :forgotten-instruction          "Please enter your email address. If it matches one in our system we'll send you reset instructions."
-   :reset-submitted                "Thanks. Your password reset request has been received."
+   :reset-submitted                "####Thanks\nIf your email address exists in our system then we've sent you you an email with instructions on how to reset your password.\n\nIf you don't see anything within the next few minutes then please check your spam folder. Failing that, send us an email: [witan@mastodonc.com](mailto:witan@mastodonc.com)"
    :reset-password                 "Reset Password"
+   :reset-password-redeem          "Please enter your new password"
    :back                           "Back"
    :thanks                         "Thanks"
    :signing-in                     "Signing in..."
+   :changing-password              "Changing your password..."
    :sign-up-failure                "There was a problem signing-up with the provided details. Please check your invite token and try again."
    :sign-in-failure                "There was a problem with your details. Please try again."
    :api-failure                    "Sorry, we're having a problem with the service. Please try again. If the problem persists, please contact us at witan@mastodonc.com" ;; TODO add link?
@@ -110,8 +113,6 @@
    :settings                       "Settings"
    :help                           "Help"})
 
-
-
 (defn get-string
   ""
   [keywd & add]
@@ -122,3 +123,8 @@
     (do
       (log/severe "Failed to find string " (str keywd))
       "## ERROR ##")))
+
+(defn get-string-md
+  [keywd & add]
+  (md->html
+   (apply get-string keywd add)))
