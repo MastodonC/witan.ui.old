@@ -31,7 +31,30 @@
           (let [{:keys [primary/view-selected]
                  :or {primary/view-selected 0}} (om/props this)]
             (sab/html
-             [:div#primary
+             [:div#container
+              [:div#mock
+               [:div#map]
+               [:div#title
+                [:h2 "Average Household Size"]
+                [:h3 "2015, London"]]
+               [:div#left-desc
+                [:div "X Axis: " [:i "year"]]
+                [:div "Y Axis: " [:i "ahs"]]
+                [:div "Min X: " [:i "2011"]]
+                [:div "Max X: " [:i "2041"]]
+                [:div "Min Y: " [:i "1.234"]]
+                [:div "Max Y: " [:i "4.542"]]]
+               [:div#slider
+                [:div#text
+                 [:span "2011"]
+                 [:span "2041"]]
+                (icons/slider :medium)]
+               [:div#selector
+                [:form.pure-form
+                 [:select
+                  [:option "Chloropleth"]]]
+                [:button.pure-button
+                 (icons/download :small)]]]
               [:div#overlay
                (switcher {:icon-0 (partial icons/topology :dark :medium)
                           :icon-1 (partial icons/visualisation :dark :medium)

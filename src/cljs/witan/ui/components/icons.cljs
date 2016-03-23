@@ -83,6 +83,14 @@
   [& args]
   (apply create-key "open_in_browser" args))
 
+(defn slider
+  [& args]
+  (apply create-key "turned_in" args))
+
+(defn download
+  [& args]
+  (apply create-key "file_download" args))
+
 ;;
 
 (defcard loading
