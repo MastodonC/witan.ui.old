@@ -91,6 +91,14 @@
   [& args]
   (apply create-key "file_download" args))
 
+(defn share
+  [& args]
+  (apply create-key "share" args))
+
+(defn printer
+  [& args]
+  (apply create-key "printer" args))
+
 ;;
 
 (defcard loading

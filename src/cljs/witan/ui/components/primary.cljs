@@ -31,8 +31,8 @@
           (let [{:keys [primary/view-selected]
                  :or {primary/view-selected 0}} (om/props this)]
             (sab/html
-             [:div#container
-              [:div#mock
+             [:div#primary-container
+              [:div#primary-mock
                [:div#map]
                [:div#title
                 [:h2 "Average Household Size"]
@@ -43,7 +43,25 @@
                 [:div "Min X: " [:i "2011"]]
                 [:div "Max X: " [:i "2041"]]
                 [:div "Min Y: " [:i "1.234"]]
-                [:div "Max Y: " [:i "4.542"]]]
+                [:div "Max Y: " [:i "4.542"]]
+                [:div "Publisher: " [:i "GLA"]]]
+               [:div#right-desc
+                [:h2 "Brent"]
+                [:div#content
+                 [:div.info
+                  [:span "Avg. Household Size"] [:i "3.78"]]
+                 [:hr]
+                 [:div.info
+                  [:span "Area"] [:i "6.70 sq mi (43.24 km2)"]]
+                 [:div.info
+                  [:span "Popn."] [:i "320,762"]]
+                 [:div.info
+                  [:span "ONS#"] [:i "00AE"]]
+                 [:div.info
+                  [:span "PCs"] [:i "HA, NW, W"]]
+                 [:div.info
+                  [:span "AC"] [:i "020"]]
+                 ]]
                [:div#slider
                 [:div#text
                  [:span "2011"]
@@ -52,9 +70,13 @@
                [:div#selector
                 [:form.pure-form
                  [:select
-                  [:option "Chloropleth"]]]
+                  [:option "Choropleth"]]]
                 [:button.pure-button
-                 (icons/download :small)]]]
+                 (icons/download :small)]
+                [:button.pure-button
+                 (icons/share :small)]
+                [:button.pure-button
+                 (icons/printer :small)]]]
               [:div#overlay
                (switcher {:icon-0 (partial icons/topology :dark :medium)
                           :icon-1 (partial icons/visualisation :dark :medium)

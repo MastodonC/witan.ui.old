@@ -1,6 +1,7 @@
 (ns witan.ui.style.app
   (:require [garden.units :refer [px percent em]]
-            [witan.ui.style.colour :as colour]))
+            [witan.ui.style.colour :as colour]
+            [witan.ui.style.fonts :as fonts]))
 
 (def pc100 (percent 100))
 (def switcher-padding 3)
@@ -60,10 +61,10 @@
                  :vertical-align :middle}]]]
 
              [:#primary
-              [:#container
+              [:#primary-container
                {:height pc100
                 :position :relative}
-               [:#mock
+               [:#primary-mock
                 {:height pc100
                  :width pc100}
                 [:#map
@@ -83,6 +84,31 @@
                   :top (px 80)}
                  [:i
                   {:color "#666"}]]
+                [:#right-desc
+                 {:position :absolute
+                  :right (px 8)
+                  :bottom (px 120)
+                  :background-color colour/switcher-bg
+                  :border-radius (px 8)
+                  :width (px 180)
+                  :text-align :center}
+                 [:h2
+                  {:margin (px 8)}]
+                 [:#content
+                  {:text-align :left
+                   :padding (px 10)
+                   :border [[(px 1) 'solid colour/lol-color-2]]
+                   :background-color colour/body-bg
+                   :border-radius [[(px 0) (px 0) (px 8) (px 8)]]
+                   :font-size (em 0.9)}
+                  [:.info
+                   {:display :flex
+                    :justify-content :space-between}
+                   [:span
+                    {:font-weight :bold}]
+                   [:i
+                    {:margin-left (px 4)
+                     :font-weight :normal}]]]]
                 [:#slider
                  {:position :absolute
                   :height (px 3)
@@ -113,7 +139,32 @@
                [:#overlay
                 {:position :absolute
                  :top (px 8)
-                 :left (px 8)}]]]]
+                 :left (px 8)}]]]
+
+             [:#secondary
+              [:#secondary-container
+               [:#secondary-mock
+                [:#settings-box
+                 {:margin (px 8)
+                  :width (percent 98.5)
+                  :background-color colour/lol-color-2
+                  :border-radius (px 8)}
+                 [:h4
+                  {:padding [[(px 4)]]
+                   :margin-bottom (px 0)}]
+                 [:#content
+                  {:text-align :left
+                   :padding (px 10)
+                   :border [[(px 1) 'solid colour/lol-color-2]]
+                   :background-color colour/body-bg
+                   :border-radius [[(px 0) (px 0) (px 8) (px 8)]]
+                   :font-size (em 0.9)}
+                  [:label
+                   {:margin-bottom (px 8)
+                    :font-family fonts/base-fonts}]
+                  [:select
+                   {:height (px 28)
+                    :font-family fonts/base-fonts}]]]]]]]
 
             [:.primary-switcher
              {:height (px (+ (* switcher-padding 2) switcher-icon-dx))
