@@ -18,7 +18,7 @@
    :string/view-edit-forecast             "View/Edit this projection"
    :string/yesterday                      "Yesterday"
    :string/model                          "Model"
-   :string/reset-submitted                "Thanks. Your password reset request has been //received."
+   :string/reset-submitted                "Thanks. Your password reset request has been received."
    :string/back                           "Back"
    :string/revert-forecast                "Revert changes"
    :string/please-wait                    "Please Wait..."
