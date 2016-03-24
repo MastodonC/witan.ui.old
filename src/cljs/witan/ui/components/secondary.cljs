@@ -51,7 +51,6 @@
                     [:div.pure-u-md-1-6
                      [:label {:for "lm"} "Latent Mortalilty"]
                      [:select.pure-u-23-24 {:id "lm"}
-                      [:option "> 65 yrs"]]]]]]]]]
-              ]))))
+                      [:option "> 65 yrs"]]]]]]]]]]))))
 
 (def secondary-split-view (om/factory Main))

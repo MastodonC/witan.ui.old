@@ -67,6 +67,29 @@
                [:#primary-mock
                 {:height pc100
                  :width pc100}
+                [:#key
+                 {:width (px 70)
+                  :position :absolute
+                  :top (px 80)
+                  :left (px 10)
+                  :background-color colour/switcher-bg
+                  :border-radius (px 8)
+                  :text-align :center}
+                 [:h3
+                  {:margin [[(px 2) (px 2)]]}]
+                 [:#content
+                  {:text-align :right
+                   :display :flex
+                   :padding (px 10)
+                   :border [[(px 1) 'solid colour/lol-color-2]]
+                   :background-color colour/body-bg
+                   :border-radius [[(px 0) (px 0) (px 8) (px 8)]]
+                   :font-size (em 0.9)}
+                  [:#legend
+                   {:margin-left (px 5)
+                    :display :flex
+                    :flex-direction :column
+                    :justify-content :space-between}]]]
                 [:#map
                  {:background "url ('../img/london2.png') no-repeat center 30px"
                   :background-size [[(px (/ 900 mock-map-ratio)) (px (/ 695 mock-map-ratio))]]
@@ -78,12 +101,6 @@
                   :left (px 100)}
                  [:h3
                   {:line-height (px 0)}]]
-                [:#left-desc
-                 {:position :absolute
-                  :left (px 8)
-                  :top (px 80)}
-                 [:i
-                  {:color "#666"}]]
                 [:#right-desc
                  {:position :absolute
                   :right (px 8)

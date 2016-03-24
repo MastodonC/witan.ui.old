@@ -34,17 +34,17 @@
              [:div#primary-container
               [:div#primary-mock
                [:div#map]
+               [:div#key
+                [:h3 "Key"]
+                [:div#content
+                 [:img {:src "/img/key.png"}]
+                 [:div#legend
+                  [:span "1.5"]
+                  [:span "3.2"]]]]
                [:div#title
                 [:h2 "Average Household Size"]
-                [:h3 "2015, London"]]
-               [:div#left-desc
-                [:div "X Axis: " [:i "year"]]
-                [:div "Y Axis: " [:i "ahs"]]
-                [:div "Min X: " [:i "2011"]]
-                [:div "Max X: " [:i "2041"]]
-                [:div "Min Y: " [:i "1.234"]]
-                [:div "Max Y: " [:i "4.542"]]
-                [:div "Publisher: " [:i "GLA"]]]
+                [:h3 "2015, London | GLA"]]
+
                [:div#right-desc
                 [:h2 "Brent"]
                 [:div#content
