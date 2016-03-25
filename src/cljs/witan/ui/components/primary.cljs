@@ -49,12 +49,14 @@
                 [:h2 "Brent"]
                 [:div#content
                  [:div.info
-                  [:span "Avg. Household Size"] [:i "3.78"]]
+                  [:span "Avg. Household Size"] [:i "2.75"]]
                  [:hr]
                  [:div.info
                   [:span "Area"] [:i "6.70 sq mi (43.24 km2)"]]
                  [:div.info
                   [:span "Popn."] [:i "320,762"]]
+                 [:div.info
+                  [:span "GSS#"] [:i "E09000005"]]
                  [:div.info
                   [:span "ONS#"] [:i "00AE"]]
                  [:div.info

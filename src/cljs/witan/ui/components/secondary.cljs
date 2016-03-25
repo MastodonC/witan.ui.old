@@ -31,26 +31,26 @@
                           :on-select #(om/transact! this `[(change/secondary-view! {:idx ~%})])})]
               [:div#secondary-mock
                [:div#settings-box
-                [:h4 "Average Household Size Projection Model"]
+                [:h4 "Borough Projection Model"]
                 [:div#content
                  [:form.pure-form.pure-form-stacked
                   [:field-set
-                   [:legend "Adjustments to the model will cause any visualisations to refresh"]
+                   [:legend "Adjustments to the model will cause visualisations to refresh"]
                    [:div.pure-g
                     [:div.pure-u-md-1-3
-                     [:label {:for "assumption"} "Migration Assumption"]
-                     [:select.pure-u-23-24 {:id "assumption"}
-                      [:option "High"]]]
+                     [:label {:for "a"} "Variant"]
+                     [:select.pure-u-23-24 {:id "a"}
+                      [:option "Capped Household Size"]]]
                     [:div.pure-u-md-1-3
-                     [:label {:for "gva-range"} "GVA% (50%)"]
-                     [:input.pure-u-23-24 {:id "gva-range" :type "range"}]]
+                     [:label {:for "b"} "Cap Size (2.95)"]
+                     [:input.pure-u-23-24 {:id "b" :type "range"}]]
                     [:div.pure-u-md-1-6
-                     [:label {:for "ltrr"} "Long-term Rotation Rate"]
-                     [:select.pure-u-23-24 {:id "ltrr"}
-                      [:option "10% - 50%"]]]
+                     [:label {:for "c"} "Fertility Assumption"]
+                     [:select.pure-u-23-24 {:id "c"}
+                      [:option "High Fertility"]]]
                     [:div.pure-u-md-1-6
-                     [:label {:for "lm"} "Latent Mortalilty"]
-                     [:select.pure-u-23-24 {:id "lm"}
-                      [:option "> 65 yrs"]]]]]]]]]]))))
+                     [:label {:for "d"} "Migration Assumption"]
+                     [:select.pure-u-23-24 {:id "d"}
+                      [:option "Low Migration"]]]]]]]]]]))))
 
 (def secondary-split-view (om/factory Main))
