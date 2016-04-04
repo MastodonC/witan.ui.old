@@ -74,7 +74,7 @@
                  [:th {:key (prefix "-output-name") :style {:width header-name-width}}
                   (i/capitalize category)]
                  [:th {:key (prefix "-output-created") :style {:width header-created-width}}
-                  (get-string :created)]
+                  (when top? (get-string :created))]
                  [:th {:key (prefix "-output-downloads") :style {:width header-downloads-width}}
                   (when top? (get-string :downloads))]]]
                [:hr {:key (prefix "-output-hr")}]
@@ -116,5 +116,5 @@
                  (when (not-empty rest-outputs)
                    (for [output rest-outputs]
                      [:div
-                      {:key (str (:category output) "-output-row")}
+                      {:key (str (-> output first first name) "-output-row")}
                       (om/build data-output-table {:output output :top? false :cursor cursor})]))])]))))
