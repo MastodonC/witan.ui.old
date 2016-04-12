@@ -17,7 +17,7 @@ server {
         server_name witan-ui;
 
         location /api {
-            access_log /var/log/nginx/access.log;
+            access_log /var/log/nginx/access.log logstash_json;
 
             # Assumes we are already behind a reverse proxy (e.g. ELB)
             real_ip_header X-Forwarded-For;

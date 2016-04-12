@@ -25,7 +25,12 @@ ENV NGINX_SERVER_ADDR $NGINX_SERVER_ADDR
 
 # move over files
 ADD target/build/ /var/www/witan-ui
+ADD log-format.conf /etc/nginx/conf.d/log-format.conf
 ADD start-nginx.sh /start-nginx
+
+# have the nginx log be piped to stdout
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Define default command.
 CMD ["/bin/bash","/start-nginx"]
