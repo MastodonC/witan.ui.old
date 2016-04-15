@@ -5,11 +5,13 @@ ENVIRONMENT=$2
 
 # deployment service sebastopol
 TAG=git-$(echo $CIRCLE_SHA1 | cut -c1-12)
+# hardcoded for now
+VPC=sandpit
 
 if [ $ENVIRONMENT = "production" ]; then
     sed "s/@@TAG@@/$TAG/" witan-ui.old-docker.json.template > witan-ui.json
 else
-    sed "s/@@TAG@@/$TAG/" witan-ui.json.template > witan-ui.json
+    sed -e "s/@@TAG@@/$TAG/" -e "s/@@ENVIRONMENT@@/$ENVIRONMENT/" -e "s/@@VPC@@/$VPC/" witan-ui.json.template > witan-ui.json
 fi
 
 # we want curl to output something we can use to indicate success/failure
