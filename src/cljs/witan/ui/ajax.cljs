@@ -17,7 +17,7 @@
 
 (defn- request
   [method-fn {:keys [id params result-cb auth]}]
-  (method-fn {:params params
+  (method-fn {:params (reduce-kv (fn [a k v] (assoc a (-> k (str) (subs 1)) v) ) {} params)
               :handler (partial handle-response :success id result-cb)
               :error-handler (partial handle-response :failure id result-cb)
               :format :json

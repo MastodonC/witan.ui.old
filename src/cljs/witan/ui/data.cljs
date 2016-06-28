@@ -35,14 +35,14 @@
 
 ;; app state schema
 (def AppStateSchema
-  {:app/side {:side/upper [[s/Keyword]]
+  {:session/token (s/maybe s/Str)
+   :app/side {:side/upper [[s/Keyword]]
               :side/lower [[s/Keyword]]}
    :app/login {:login/phase s/Keyword
                :login/success? s/Bool
-               :login/token (s/maybe s/Str)
-               :login/id (s/maybe s/Str)
                :login/message (s/maybe s/Str)}
-   :app/user {:user/name (s/maybe s/Str)
+   :app/user {:user/username (s/maybe s/Str)
+              :user/id (s/maybe s/Str)
               :user/groups-by-id [s/Int]}
    :app/route (s/maybe s/Keyword)
    :app/route-params (s/maybe s/Any)
@@ -61,16 +61,16 @@
 ;; default app-state
 (defonce app-state
   (->>
-   {:app/side {:side/upper [[:button :workspaces]
+   {:session/token nil
+    :app/side {:side/upper [[:button :workspaces]
                             [:button :data]]
                :side/lower [[:button :help]
                             [:button :logout]]}
     :app/login {:login/phase :prompt
                 :login/success? false
-                :login/token nil
-                :login/id nil
                 :login/message nil}
-    :app/user {:user/name nil
+    :app/user {:user/username nil
+               :user/id nil
                :user/groups-by-id []}
     :app/route nil
     :app/route-params nil
@@ -251,11 +251,12 @@
              (swap! state assoc-in [:app/login :login/message] message))})
 
 (defmethod mutate 'login/complete!
-  [{:keys [state]} _ {:keys [token id]}]
+  [{:keys [state]} _ {:keys [session/token user/id user/username]}]
   {:value {:keys [:app/login]}
    :action (fn [_]
-             (swap! state assoc-in [:app/login :login/id] id)
-             (swap! state assoc-in [:app/login :login/token] token))})
+             (swap! state assoc-in [:app/user :user/id] id)
+             (swap! state assoc-in [:app/user :user/username] username)
+             (swap! state assoc :session/token token))})
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; workspace dash changes

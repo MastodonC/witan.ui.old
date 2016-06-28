@@ -1,5 +1,5 @@
 (ns witan.ui.controllers.user
-  (:require [witan.ui.ajax :refer [GET POST]]
+  (:require [witan.ui.ajax :refer [GET POST endpoint]]
             [schema.core :as s]
             [om.next :as om]
             [witan.ui.data :as data])
@@ -7,8 +7,8 @@
                    [witan.ui.env :as env :refer [cljs-env]]))
 
 (def Login
-  {:username s/Str
-   :password (s/constrained s/Str #(> (count %) 5))})
+  {:user/username (s/constrained s/Str #(> (count %) 5))
+   :user/password (s/constrained s/Str #(> (count %) 7))})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -25,8 +25,7 @@
 
 (defn local-endpoint
   [method]
-  (let [api-url (cljs-env :witan-api-url)] ;; 'nil' is a valid api-url (will default to current hostname)
-    (str api-url "/api" method)))
+  (str endpoint method))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -35,7 +34,7 @@
 
 (defmethod api-response
   [:login :success]
-  [{:keys [owner]} {:keys [token] :as response}]
+  [{:keys [owner]} {:keys [session/token] :as response}]
   (if token
     (login-success! owner response)
     (om/transact! owner '[(login/set-message! {:message :string/sign-in-failure})])))
@@ -43,8 +42,7 @@
 (defmethod api-response
   [:login :failure]
   [{:keys [owner]} response]
-  (login-success! owner response)
-  #_(om/transact! owner '[(login/set-message! {:message :string/api-failure})]))
+  (om/transact! owner '[(login/set-message! {:message :string/api-failure})]))
 
 (defn route-api-response
   [event owner]
@@ -58,7 +56,7 @@
 
 (defmethod handle :login
   [event owner {:keys [email pass]}]
-  (let [args {:username email :password pass}]
+  (let [args {:user/username email :user/password pass}]
     (POST (local-endpoint "/login")
           {:id event
            :params (s/validate Login args)
