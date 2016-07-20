@@ -24,10 +24,6 @@ server {
             set_real_ip_from 0.0.0.0/0;
 
             proxy_pass http://${SERVER_ADDR}:${SERVER_PORT};
-
-
-
-
         }
 
         location /monitoring/_elb_status {
